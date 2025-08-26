@@ -53,13 +53,46 @@ else
 		
 			2)
 				echo "---- Corriendo proceso ----"
-				cd ~/EPNro1
-				./consolidar.sh
+				
 				;;
 
 			3)
+				#Verifico que la variable este definida
+				if [ -z "$FILENAME" ];then
+
+					echo "La variable no está definida"
+
+				#Verifico que existe el archivo
+				elif [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
+
+					echo "Archivo no encontrado, por favor cree el entorno."
+
+				else
+					
+					echo "Listado de alumnos ordenado por padrón: "
+					sort -n "$HOME/EPNro1/salida/$FILENAME.txt" 
+					echo "---------- Fin de listado ----------"
+
+				fi
 				;;
 			4)
+				#Verifico que la variable este definida
+				if [ -z "$FILENAME" ];then
+
+					echo "La variable no está definida"
+
+				#Verifico que existe el archivo
+				elif [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
+
+					echo "Archivo no encontrado, por favor cree el entorno."
+
+				else
+					
+					echo "Top 10 de alumnos con mejores notas: "
+					sort -k4 -nr "$HOME/EPNro1/salida/$FILENAME.txt" | head -n 10 #Ordena por notas y muestra las primeras 10 lineas 
+					echo "---------- Fin de listado ----------"
+
+				fi
 				;;
 			5)
 				;;
