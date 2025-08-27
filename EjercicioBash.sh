@@ -46,9 +46,9 @@ else
 		echo " 6) Salir "
 		echo "--------------------"
 		echo -n "Elija una opción: "
-		read option
+		read opcion
 
-		case $option in
+		case $opcion in
 			1)
 				echo "---- Creando entorno ----"
 				mkdir -p ~/EPNro1 #evita error si la carpeta ya existe
