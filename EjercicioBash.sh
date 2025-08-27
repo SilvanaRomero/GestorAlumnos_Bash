@@ -2,11 +2,11 @@
 
 parametro=$1
 
-if [ "$parámetro" = "-d" ]; then
+if [ "$parametro" = "-d" ]; then
 	
 	#Verificar si existe y borrar el entorno
 
-	if [ -d "$HOME/EPNro1"]; then
+	if [ -d "$HOME/EPNro1" ]; then
 		rm -rf "$HOME/EPNro1"
 		echo "Directorio EPNro1 eliminado."
 	else
@@ -15,9 +15,9 @@ if [ "$parámetro" = "-d" ]; then
 	
 	#Verificar la existencia y mata procesos creados en background
 
-	processes=$(pgrep -f "consolidar.sh") #Contiene los PID (Id de procesos que se esten ejecutando consolidar.sh
-	if [ -n "$processes" ]; then
-		kill $processes
+	proceso=$(pgrep -f "consolidar.sh") #Contiene los PID (Id de procesos que se esten ejecutando consolidar.sh
+	if [ -n "$proceso" ]; then
+		kill $proceso
 		echo "Procesos consolidar.sh detenidos."
 	else
 		echo "No hay procesos consolidar.sh activos."
@@ -26,6 +26,15 @@ if [ "$parámetro" = "-d" ]; then
 	exit 0
 	
 else
+
+	if [ -z "$FILENAME" ]; then
+    echo "La variable FILENAME no está definida."
+    echo -n "Por favor, ingrese un nombre para el archivo: "
+    read nombre
+    export FILENAME=$nombre
+    echo "Variable FILENAME definida como: $FILENAME"
+	fi
+
 	while true; do # se ejecuta hasta que el usuario elija salir
 
 		echo "------- MENÚ -------"
@@ -46,8 +55,6 @@ else
 				mkdir -p ~/EPNro1/entrada
 				mkdir -p ~/EPNro1/salida
 				mkdir -p ~/EPNro1/procesado
-				touch ~/EPNro1/salida/$FILENAME.txt
-				touch ~/EPNro1/consolidar.sh 
 				echo "Entorno y archivos creados correctamente"
 				;;
 		
@@ -57,13 +64,8 @@ else
 				;;
 
 			3)
-				#Verifico que la variable este definida
-				if [ -z "$FILENAME" ];then
-
-					echo "La variable no está definida"
-
 				#Verifico que existe el archivo
-				elif [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
+				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
 
 					echo "Archivo no encontrado, por favor cree el entorno."
 
@@ -76,13 +78,8 @@ else
 				fi
 				;;
 			4)
-				#Verifico que la variable este definida
-				if [ -z "$FILENAME" ];then
-
-					echo "La variable no está definida"
-
 				#Verifico que existe el archivo
-				elif [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
+				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
 
 					echo "Archivo no encontrado, por favor cree el entorno."
 
@@ -95,8 +92,23 @@ else
 				fi
 				;;
 			5)
+				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ]; then
+					echo "Archivo no encontrado, por favor cree el entorno. "
+				else
+					read -p "Ingrese el número de padrón: " padron
+					resultado=$(grep "^$padron" "$HOME/EPNro1/salida$FILENAME.txt")
+
+					if [ -z "$resultado" ]; then
+						echo "Padrón no encontrado."
+					else
+						echo "Datos del padrón: $padron:"
+						echo "$resultado"
+					fi
+				fi
 				;;
 			6)
+				echo "Saliendo del programa..."
+				exit 0
 				;;
 		
 		esac
