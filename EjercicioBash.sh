@@ -26,7 +26,7 @@ if [ "$parametro" = "-d" ]; then
 	exit 0
 	
 else
-
+	# De no existir la variable de FILENAME la exporta
 	if [ -z "$FILENAME" ]; then
     echo "La variable FILENAME no está definida."
     echo -n "Por favor, ingrese un nombre para el archivo: "
@@ -34,8 +34,9 @@ else
     export FILENAME=$nombre
     echo "Variable FILENAME definida como: $FILENAME"
 	fi
+fi
 
-	while true; do # se ejecuta hasta que el usuario elija salir
+	while [ "$opcion" != 6] ; do # se ejecuta hasta que el usuario elija salir
 
 		echo "------- MENÚ -------"
 		echo " 1) Crear entorno "
@@ -59,51 +60,35 @@ else
 				;;
 		
 			2)
-				echo "---- Corriendo proceso ----"
-				
+				echo "---- Corriendo proceso en background ----"
+				chmod +x ./consolidar.sh
+				./consolidar.sh & 				
 				;;
 
 			3)
-				#Verifico que existe el archivo
-				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
+				
+				echo "Listado de alumnos ordenado por padrón: "
+				sort -n "$HOME/EPNro1/salida/$FILENAME.txt" 
+				echo "---------- Fin de listado ----------"
 
-					echo "Archivo no encontrado, por favor cree el entorno."
-
-				else
-					
-					echo "Listado de alumnos ordenado por padrón: "
-					sort -n "$HOME/EPNro1/salida/$FILENAME.txt" 
-					echo "---------- Fin de listado ----------"
-
-				fi
+				
 				;;
 			4)
-				#Verifico que existe el archivo
-				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ];then
+				echo "Top 10 de alumnos con mejores notas: "
+				sort -k4 -nr "$HOME/EPNro1/salida/$FILENAME.txt" | head -n 10 #Ordena por notas y muestra las primeras 10 lineas 
+				echo "---------- Fin de listado ----------"
 
-					echo "Archivo no encontrado, por favor cree el entorno."
-
-				else
-					
-					echo "Top 10 de alumnos con mejores notas: "
-					sort -k4 -nr "$HOME/EPNro1/salida/$FILENAME.txt" | head -n 10 #Ordena por notas y muestra las primeras 10 lineas 
-					echo "---------- Fin de listado ----------"
-
-				fi
 				;;
 			5)
-				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ]; then
-					echo "Archivo no encontrado, por favor cree el entorno. "
-				else
-					read -p "Ingrese el número de padrón: " padron
-					resultado=$(grep "^$padron" "$HOME/EPNro1/salida$FILENAME.txt")
 
-					if [ -z "$resultado" ]; then
-						echo "Padrón no encontrado."
-					else
-						echo "Datos del padrón: $padron:"
-						echo "$resultado"
-					fi
+				read -p "Ingrese el número de padrón: " padron
+				resultado=$(grep "^$padron" "$HOME/EPNro1/salida/$FILENAME.txt")
+
+				if [ -z "$resultado" ]; then
+					echo "Padrón no encontrado."
+				else
+					echo "Datos del padrón: $padron:"
+					echo "$resultado"
 				fi
 				;;
 			6)
@@ -115,6 +100,3 @@ else
 	
 	done
 			
-			
-
-fi
