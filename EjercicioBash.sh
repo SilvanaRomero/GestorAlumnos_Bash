@@ -61,8 +61,14 @@ fi
 		
 			2)
 				echo "---- Corriendo proceso en background ----"
+				if [ ! -f "$HOME/EPNro1/salida/$FILENAME.txt" ]; then
+					touch "$HOME/EPNro1/salida/$FILENAME.txt"
+					echo "Archivo $FILENAME.txt creado en salida."
+				fi
+				
 				chmod +x ./consolidar.sh
-				./consolidar.sh & 				
+				./consolidar.sh & 
+								
 				;;
 
 			3)
